@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-REPO_URL="git@github.com:OrderTheCat/freetube-patch.git"
+REPO_URL="git@github.com:YOUR_USERNAME/io.freetubeapp.FreeTube.git"
 REPO_DIR="$HOME/io.freetubeapp.FreeTube"
 
 # Install deps
@@ -9,7 +9,7 @@ sudo pacman -S --needed flatpak flatpak-builder nodejs npm
 
 # Clone repo
 if [ ! -d "$REPO_DIR" ]; then
-  git clone "$REPO_URL" "$REPO_DIR"
+    git clone "$REPO_URL" "$REPO_DIR"
 fi
 
 # Build
@@ -18,7 +18,7 @@ flatpak-builder --user --install --force-clean --install-deps-from=flathub build
 
 # Update script
 mkdir -p ~/.local/bin
-cat >~/.local/bin/freetube-update.sh <<'EOF'
+cat > ~/.local/bin/freetube-update.sh << 'EOF'
 #!/bin/bash
 REPO_DIR="$HOME/io.freetubeapp.FreeTube"
 MANIFEST="$REPO_DIR/io.freetubeapp.FreeTube.yml"
@@ -40,7 +40,7 @@ chmod +x ~/.local/bin/freetube-update.sh
 
 # Systemd timer
 mkdir -p ~/.config/systemd/user
-cat >~/.config/systemd/user/freetube-update.service <<'EOF'
+cat > ~/.config/systemd/user/freetube-update.service << 'EOF'
 [Unit]
 Description=Update patched FreeTube Flatpak
 
@@ -49,7 +49,7 @@ Type=oneshot
 ExecStart=%h/.local/bin/freetube-update.sh
 EOF
 
-cat >~/.config/systemd/user/freetube-update.timer <<'EOF'
+cat > ~/.config/systemd/user/freetube-update.timer << 'EOF'
 [Unit]
 Description=Daily FreeTube update check
 
@@ -63,4 +63,8 @@ EOF
 
 systemctl --user enable --now freetube-update.timer
 
-echo "Done. Run: flatpak run io.freetubeapp.FreeTube"
+# Cleanup
+rm -rf "$REPO_DIR/build"
+sudo pacman -Rns --noconfirm nodejs npm
+
+echo "Done. Run: flatpak run io.freetubeapp.FreeTube"   
