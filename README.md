@@ -1,6 +1,6 @@
 Removes the electron menu that pops up when you press alt.
 
-## How to Install
+## How to install
 
 1. Clone the repository:
 
