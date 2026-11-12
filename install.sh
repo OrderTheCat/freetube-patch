@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-REPO_URL="git@github.com:YOUR_USERNAME/io.freetubeapp.FreeTube.git"
+REPO_URL="git@github.com:OrderTheCat/freetube-patch.git"
 REPO_DIR="$HOME/io.freetubeapp.FreeTube"
 
 # Install deps
