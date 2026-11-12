@@ -15,6 +15,7 @@ git clone git@github.com:OrderTheCat/freetube-patch.git && cd freetube-patch
 ```bash
 ./install.sh
 
+```
 
 
 This script will create another script which will auto update the patched freetube.
