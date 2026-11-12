@@ -4,6 +4,10 @@ runtime-version: '26.08'
 sdk: org.freedesktop.Sdk
 base: org.electronjs.Electron2.BaseApp
 base-version: '26.08'
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.node22
+build-options:
+  append-path: /usr/lib/sdk/node22/bin
 command: run.sh
 separate-locales: false
 finish-args:
@@ -20,6 +24,15 @@ finish-args:
   - --talk-name=org.gnome.SessionManager
   - --talk-name=org.gnome.SettingsDaemon
 modules:
+  - name: asar
+    buildsystem: simple
+    build-commands:
+        - mkdir -p /app/asar
+        - tar xzf /run/build/asar/asar-bundle.tar.gz -C /app/asar
+    sources:
+        - type: file
+          path: asar-bundle.tar.gz
+
   - name: freetube
     buildsystem: simple
     sources:
@@ -68,6 +81,10 @@ modules:
     build-commands:
       # Bundle app
       - unzip freetube-*.zip -d /app/freetube
+      - /app/asar/node_modules/.bin/asar extract /app/freetube/resources/app.asar /app/freetube/resources/_app
+      - sed -i 's/\.Menu\.setApplicationMenu([a-zA-Z_$][a-zA-Z0-9_$]*)/.Menu.setApplicationMenu(null)/' /app/freetube/resources/_app/dist/main.js   
+      - /app/asar/node_modules/.bin/asar pack /app/freetube/resources/_app /app/freetube/resources/app.asar
+      - rm -rf /app/freetube/resources/_app   
       # Install app wrapper
       - install run.sh /app/bin/
       # Install app icon and desktop file
